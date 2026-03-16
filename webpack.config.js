@@ -33,7 +33,10 @@ export default {
 
   devServer: {
     static: "./dist",
-    port: 3000,
-    open: true
+    port: 8080,
+    open: true,
+    hot: true,
+    liveReload: true,
+    watchFiles: ["src/**/*"]
   }
 };
