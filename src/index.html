@@ -7,70 +7,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
 </head>
 <body>
-
   <div id="notebook-container">
-    
     <aside id="sidebar-tabs">
       <div id="recent-tabs-container">
-        <button class="tab active">General</button>
-        <button class="tab">Odin Project</button>
-        <button class="tab">Boxing History</button>
-        <button class="tab">German Notes</button>
-        <button class="tab">Shopping</button>
-      </div>
-
+        </div>
       <div class="sidebar-actions">
-        <button id="add-page-btn" title="Add new section">+ New Page</button>
-        <button id="index-btn" title="View all sections">📖 Index</button>
+        <button id="add-page-btn">+ New Page</button>
+        <button id="index-btn">📖 Index</button>
       </div>
     </aside>
 
     <main id="notebook-page">
-      <header class="page-header">
-        <div class="top-row">
-           <h1>TODO LIST</h1>
-           <button id="dog-ear-btn" title="Fold corner">📐 dog ear</button>
-        </div>
-        
-        <div class="meta-row">
-          <p class="date">March 4, 2026</p> 
-          <form class="search-form">
-            <input type="search" placeholder="Search todos...">
-            <button type="submit">Search</button>
-          </form>
-        </div>
-      </header>
+      <div id="header-container">
+          </div>
 
       <div id="Content">
-        <div class="todo-card">
-          <div class="todo-header">
-            <button class="checklist-toggle" title="Checklist Toggle">[ ]</button>
-            <h3 class="title">title: Finish Webpack Modules</h3>
-            <h5 class="due-date">due date: Today</h5>
-            
-            <div class="actions">
-              <button class="hide-btn">hide</button>
-              <button class="delete-btn">delete</button>
-            </div>
-          </div>
-          
-          <div class="todo-body">
-            <h4 class="description">Description: Hook up the DOM logic to the Factory functions.</h4>
-          </div>
         </div>
-      </div>
     </main>
-
   </div>
-
-  <div id="index-modal" class="hidden">
-    <div class="modal-content">
-      <h2>Table of Contents</h2>
-      <ul id="all-projects-list">
-        </ul>
-      <button id="close-index">Close</button>
-    </div>
-  </div>
-
 </body>
 </html>
