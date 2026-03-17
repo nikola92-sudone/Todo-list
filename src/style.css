@@ -121,6 +121,12 @@ h3.title {
   font-size: 1.5rem;
   color: #1a1a1a;
   flex-grow: 1;
+  
+  /* The Magic Lines */
+  word-wrap: break-word;       /* Breaks long words if they don't fit */
+  overflow-wrap: break-word;   
+  white-space: normal;         /* Ensures text wraps to the next line */
+  line-height: 1.2;            /* Keeps the text from overlapping the lines below */
 }
 
 h5.due-date {
@@ -147,12 +153,31 @@ button:hover {
   text-decoration: underline;
 }
 
+/* --- SIDEBAR BUTTON OVERRIDES --- */
+.sidebar-actions button {
+  color: #eaeef1; /* A muted slate/pencil grey */
+  font-size: 1.2rem;
+  margin-top: 10px;
+  margin-left: 15px; /* Pushes them in slightly to align with tabs */
+  transition: color 0.2s ease;
+}
+
+.sidebar-actions button:hover {
+  color: #8596a6; /* Darker ink color when you hover */
+  text-decoration: none; /* Removes the underline effect */
+}
+
+/* Make the + icon stand out just a tiny bit */
+#add-page-btn {
+  font-weight: bold;
+}
+
 /* =========================================
    NEW TODO FORM STYLES (STRICT GRID AREAS)
 ========================================= */
 
 #new-todo-form {
-  display: grid !important; /* Forces grid layout */
+  display: grid; 
   grid-template-columns: auto auto 1fr auto auto;
   grid-template-areas:
     "date cat empty save cancel"
@@ -213,3 +238,30 @@ button:hover {
 
 #cancel-task-btn { color: #c92a2a; }
 #cancel-task-btn:hover { color: #a61e1e; }
+
+/* --- THE EDITABLE PAGE TITLE --- */
+.page-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#page-title-input {
+  font-family: 'Indie Flower', cursive;
+  font-size: 2.0rem;
+  color: #b73a3a; /* Red marker ink */
+  text-align: center;
+  width: 50%;
+  min-height: 45px;
+  border-bottom: 2px dashed transparent; 
+  outline: none;
+  
+  /* These rules force the text to wrap! */
+  word-wrap: break-word; 
+  white-space: pre-wrap; 
+  line-height: 1.2;
+}
+
+#page-title-input:focus {
+  border-bottom: 2px dashed #b73a3a; 
+}

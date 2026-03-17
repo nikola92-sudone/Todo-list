@@ -1,18 +1,23 @@
 import './style.css';
-
-// src/index.js
 import { createTodoForm } from './logic/domComponents.js';
-import { renderTodos, setupFormListeners } from './logic/taskController.js';
+import { 
+    renderTodos, 
+    setupFormListeners, 
+    setupTitleListener, 
+    setupUndoListener 
+} from './logic/taskController.js';
 
-// 1. Inject the form into the notebook page (above the content)
+// 1. Grab the main notebook page area
 const notebookPage = document.querySelector('#notebook-page');
-const contentArea = document.querySelector('#Content');
-const formElement = createTodoForm();
 
+// 2. Create the form and append it to the bottom of the page
+const formElement = createTodoForm();
 notebookPage.appendChild(formElement);
 
-// 2. Set up the event listeners for the form and buttons
+// 3. Initialize all our event listeners (The Brains)
 setupFormListeners();
+setupTitleListener();
+setupUndoListener(); // <--- Turns on the Ctrl + Z feature!
 
-// 3. Render any tasks that are already saved in localStorage
+// 4. Initial render of the tasks and title to the screen
 renderTodos();
