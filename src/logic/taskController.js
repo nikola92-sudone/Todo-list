@@ -1,5 +1,5 @@
 // src/taskController.js
-import { getTodos, addTodo, deleteTodo, getCategories, getCurrentPage, renameCategory, setCurrentPage, undoAction } from './taskStore.js';
+import { getTodos, addTodo, deleteTodo, getCategories, getCurrentPage, renameCategory, undoAction, redoAction } from './taskStore.js';
 import { createTodoCard } from './domComponents.js';
 
 export function renderTodos() {
@@ -123,22 +123,26 @@ export function setupTitleListener() {
 
 export function setupUndoListener() {
     document.addEventListener('keydown', (e) => {
-        // Check for Ctrl + Z (or Cmd + Z on Mac)
-        if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-            
-            // If the user is currently typing in an input box or the title, 
-            // let the browser handle the normal text undo!
-            const activeEl = document.activeElement;
-            if (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable) {
-                return; 
-            }
+        
+        // Prevent triggering if typing in an input box
+        const activeEl = document.activeElement;
+        if (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable) {
+            return; 
+        }
 
-            e.preventDefault(); // Stop default browser behavior
-            
-            // Call the undo function from the Store
-            const didUndo = undoAction();
-            if (didUndo) {
-                renderTodos(); // Redraw the screen with the restored data!
+        // --- UNDO: Ctrl + Z (But NOT holding Shift) ---
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+            e.preventDefault(); 
+            if (undoAction()) {
+                renderTodos(); 
+            }
+        }
+
+        // --- REDO: Ctrl + Y  -OR-  Ctrl + Shift + Z ---
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+            e.preventDefault();
+            if (redoAction()) {
+                renderTodos();
             }
         }
     });
