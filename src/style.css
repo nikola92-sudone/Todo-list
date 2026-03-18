@@ -6,20 +6,21 @@
 }
 
 body {
-  background-color: #2c3e50; /* Dark desk background to make the notebook pop */
+  background-color: #2c3e50; 
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-family: 'Indie Flower', cursive; /* Handwritten font */
+  align-items: flex-start; 
+  min-height: 100vh; 
+  padding: 50px 20px; 
+  font-family: 'Indie Flower', cursive; 
 }
 
 #notebook-container {
   display: flex;
   width: 750px;
-  height: 550px;
+  min-height: 550px; /* <--- min-height allows the downward stretch! */
   position: relative;
-  filter: drop-shadow(5px 10px 10px rgba(0,0,0,0.5)); /* Book shadow */
+  filter: drop-shadow(5px 10px 10px rgba(0,0,0,0.5)); 
 }
 
 /* --- THE TRUE LEFT SIDEBAR --- */
@@ -170,10 +171,37 @@ h5.due-date {
   color: #d32f2f; /* Red ink for dates */
 }
 
+/* =========================================
+   EDITABLE, COLLAPSIBLE DESCRIPTION
+========================================= */
+
+/* The actual description text */
 .todo-body h4 {
-  padding-left: 35px;
-  color: #444;
-  font-size: 1.2rem;
+    position: relative;
+    padding-left: 35px;
+    color: #444;
+    font-size: 1.2rem;
+    min-height: 1.2em; /* Keeps a tiny space even if it's empty! */
+    outline: none; /* Already handled by .editable-text, but good to have here too */
+}
+
+/* If the description is empty, hide its content but NOT the space */
+.todo-body h4:empty {
+    visibility: hidden;
+}
+
+/* Add a subtle placeholder only when you hover over an empty description */
+.todo-body h4:empty::before {
+    content: "Add Description...";
+    position: absolute;
+    left: 35px;
+    top: 0;
+    color: #a0b0c0; /* Subtle blue/gray link color */
+    font-size: 1rem;
+    font-style: italic;
+    opacity: 0.6;
+    visibility: visible; /* Makes the placeholder visible on hover */
+    pointer-events: none; /* Prevents the placeholder from blocking the click to the main element */
 }
 
 /* Make your buttons look like blue pen links */
@@ -303,4 +331,318 @@ button:hover {
   color: #b73a3a; 
   background: transparent;
   border-bottom: 2px solid #b73a3a; 
+}
+
+/* =========================================
+   BOTTOM INDEX NAVIGATION
+========================================= */
+#bottom-page-nav {
+  display: flex;
+  flex-direction: row; 
+  justify-content: center; /* <--- This centers the items horizontally! */
+  align-items: baseline; 
+  flex-wrap: wrap; 
+  gap: 20px; 
+  
+  /* Pinned to the bottom of the notebook */
+  position: absolute;
+  bottom: 20px; 
+  left: 0;           /* <--- Start exactly at the left edge */
+  width: 100%;       /* <--- Span the full width for perfect centering */
+  z-index: 1;
+}
+
+/* =========================================
+   INDEX MODAL (TABLE OF CONTENTS)
+========================================= */
+
+#index-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    background: rgba(44, 62, 80, 0.6); /* Darkens the desk behind it */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; 
+    backdrop-filter: blur(2px); /* Cool modern touch */
+}
+
+/* Toggles the visibility */
+#index-modal-overlay.hidden {
+    display: none;
+}
+
+/* The physical "Index Card" */
+.index-modal-content {
+    background-color: #fdfaf6; /* Matches your paper */
+    padding: 30px;
+    border-radius: 5px;
+    width: 350px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    position: relative;
+    border-top: 6px solid #b73a3a; /* Red marker stripe at the top */
+    text-align: center;
+}
+
+.index-modal-content h2 {
+    font-family: 'Indie Flower', cursive;
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 2px dashed #a0b0c0;
+    padding-bottom: 10px;
+}
+
+#close-index-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #d32f2f;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+#close-index-btn:hover {
+    color: #8a1c1c;
+    transform: scale(1.1);
+}
+
+/* The List of Pages */
+#category-list {
+    list-style: none; /* Removes default bullets */
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto; /* Adds a scrollbar if you have tons of pages */
+}
+
+.index-item {
+    font-size: 1.5rem;
+    color: #0056b3; 
+    padding: 10px 5px; 
+    border-bottom: 1px solid #e0d5c1;
+    transition: transform 0.2s ease, color 0.2s ease;
+    
+    /* NEW RULES */
+    display: flex;
+    justify-content: center; /* Centers the text */
+    align-items: center;
+    position: relative; /* Allows the X button to pin itself to the right edge */
+}
+.index-item:hover {
+    transform: translateX(5px); /* Gentle slide to the right on hover */
+    color: #b73a3a; /* Turns red when you hover */
+}
+
+/* The page you are currently on */
+.index-item.active-page {
+    font-weight: bold;
+    color: #1a1a1a; /* Black ink to show you are already here */
+    cursor: default;
+}
+.index-item.active-page:hover {
+    transform: none; 
+}
+
+.page-name {
+    text-align: center;
+    cursor: pointer;
+    /* Removed flex-grow and text-align: left */
+}
+
+/* 3. Pin the delete button to the right side */
+.delete-page-btn {
+    position: absolute; /* Pulls it out of the flex layout */
+    right: 10px;        /* Pins it perfectly to the right edge */
+    background: transparent;
+    border: none;
+    color: #d32f2f; 
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.5; 
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    padding: 5px;
+}
+
+.delete-page-btn:hover {
+    opacity: 1;
+    transform: scale(1.2); 
+    text-decoration: none; 
+}
+
+/* =========================================
+   COMPLETED TASKS
+========================================= */
+
+/* Fade out the entire card */
+.todo-card.completed {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+/* Green tick for the button */
+.todo-card.completed .checklist-toggle {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+/* Red pen strikethrough for the title! */
+.todo-card.completed h3.title {
+    text-decoration: line-through;
+    text-decoration-color: #d32f2f; /* Red ink */
+    text-decoration-thickness: 3px; 
+    color: #555;
+}
+
+/* Red pen strikethrough for the description too */
+.todo-card.completed .description {
+    text-decoration: line-through;
+    text-decoration-color: #d32f2f;
+    text-decoration-thickness: 2px;
+}
+
+/* The separator line above completed tasks */
+.completed-separator {
+    width: 100%;
+    height: 2px;
+    background-image: repeating-linear-gradient(to right, #0056b3 0, #0056b3 10px, transparent 10px, transparent 20px);
+    margin: 40px 0;
+    opacity: 0.7;
+}
+
+
+/* =========================================
+   INLINE EDITING STYLES
+========================================= */
+
+/* The editable Title and Description */
+.editable-text {
+    outline: none;
+    border-bottom: 2px dashed transparent;
+    transition: border-bottom 0.2s ease;
+}
+
+/* Show a dashed blue line under the text when clicking to edit */
+.editable-text:focus {
+    border-bottom: 2px dashed #0056b3; 
+    background-color: rgba(255, 255, 255, 0.4); /* Slight highlight */
+    border-radius: 3px;
+}
+
+/* The Native Date Input */
+.due-date-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.edit-date-input {
+    font-family: 'Indie Flower', cursive;
+    color: #d32f2f; /* Red ink */
+    font-size: 1.1rem;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-bottom: 2px dashed transparent;
+}
+
+/* The little calendar icon inside the input */
+.edit-date-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.edit-date-input:focus {
+    border-bottom: 2px dashed #d32f2f;
+}
+
+/* Keep completed tasks from being edited easily to avoid confusion */
+.todo-card.completed .editable-text {
+    pointer-events: none; 
+}
+.todo-card.completed .edit-date-input {
+    pointer-events: none;
+}
+
+/* =========================================
+   HIDE EMPTY DESCRIPTIONS
+========================================= */
+/* If there is no text, collapse the space so tasks move up! */
+.todo-body h4:empty {
+    display: none; 
+}
+
+/* =========================================
+   5 COLORED SIDE TABS
+========================================= */
+
+/* =========================================
+   5 COLORED SIDE TABS
+========================================= */
+
+#side-tabs {
+    position: absolute;
+    top: 30px; 
+    bottom: 30px;  
+    
+    /* CHANGE: Pushed further out to the right */
+    right: -95px;  
+    
+    /* CHANGE: Made the tabs significantly wider */
+    width: 100px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; 
+    z-index: -1; 
+}
+
+/* Base style for all tabs */
+
+.side-tab {
+    width: 100%;
+    min-height: 50px;
+    padding: 10px 25px 10px 10px; 
+    
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    
+    clip-path: polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%);
+    
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.1;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* NEW: Drop shadow so it floats off the desk! */
+    filter: drop-shadow(3px 5px 4px rgba(0,0,0,0.4));
+    
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Slide out slightly and increase shadow when hovered */
+.side-tab:hover {
+    transform: translateX(5px);
+    /* NEW: We combine drop-shadow and brightness here! */
+    filter: drop-shadow(5px 8px 6px rgba(0,0,0,0.6)) brightness(1.1);
+}
+
+/* The 5 specific colors based on your drawing! */
+.side-tab:nth-child(1) { background-color: #2ecc71; color: #fff; } /* Green */
+.side-tab:nth-child(2) { background-color: #3498db; color: #fff; } /* Blue */
+.side-tab:nth-child(3) { background-color: #f1c40f; color: #222; } /* Yellow */
+.side-tab:nth-child(4) { background-color: #e74c3c; color: #fff; } /* Red */
+.side-tab:nth-child(5) { background-color: #fdfaf6; color: #222; border-right: 2px solid #ccc;} /* White paper color */
+
+/* Important: Make sure the notebook paper sits ON TOP of the tabs */
+#notebook-page {
+    z-index: 2; 
 }
