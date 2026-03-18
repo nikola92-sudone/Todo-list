@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "setup": "npm install",
-    "build": "webpack",
+    "build": "webpack --mode production",
     "start": "webpack serve --open",
     "watch": "webpack --watch"
   },
